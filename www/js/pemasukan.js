@@ -116,7 +116,7 @@ angular.module('pemasukan.controllers', ['chart.js','ionic','ionic-color-picker'
                                 'tanggal' : res.rows.item(i).tanggal,
                                 'toggle' : res.rows.item(i).toggle,
                                 'kategori' : res.rows.item(i).kategori,
-                                'nama' : nama.substring(0,1).toUpperCase(),                                  
+                                'nama' : (nama) ? nama.substring(0,1).toUpperCase() : "-",                                  
                                 'namaKategori' : nama,                                  
                                 'warna' : res.rows.item(i).warna,
                             };
