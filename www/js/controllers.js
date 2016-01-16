@@ -352,6 +352,7 @@ $ionicModal.fromTemplateUrl('templates/tambah.html', {
     var total_x2 = 0;
     var dataKu = [];
     var lastMonth = '';
+    var lastX = 0;
 
 
     var query = "SELECT pengeluaran.*,sum(pengeluaran.jumlah) as total,substr(tanggal, 1, 7) grouBln FROM pengeluaran group by grouBln";
@@ -378,6 +379,7 @@ $ionicModal.fromTemplateUrl('templates/tambah.html', {
           }
           x[i] = sxd;
           total_x +=sxd;
+          lastX = sxd;
           //end of hitungan X
 
           //mulai hitungan XY               
@@ -403,7 +405,7 @@ $ionicModal.fromTemplateUrl('templates/tambah.html', {
 
         var hasil1 = total_pengeluaranY/jumdata; // rumus : a = ∑ Y / n 
         var hasil2 = Math.round(total_xy/total_x2); // rumus : b = ∑ (XY) / ∑ X2
-        var hasil3 = Math.round(hasil1+hasil2*12); // rumus : Y = a + bX
+        var hasil3 = Math.round(hasil1+hasil2*(lastX+1)); // rumus : Y = a + bX
         
         /**
          * check data         
