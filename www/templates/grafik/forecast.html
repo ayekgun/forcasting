@@ -1,0 +1,15 @@
+<ion-view view-title="Forecasting">
+  <ion-content ng-controller="forecastCtrl">
+    <div class="card">
+        <div class="item item-divider">
+           Forecast chart
+        </div>
+        <div class="item item-text-wrap">
+            <canvas id="line" class="chart chart-line" chart-data="data"
+              chart-labels="labels" chart-legend="true" chart-series="series"
+              chart-click="onClick" >
+            </canvas> 
+        </div>        
+    </div>
+</ion-content>
+</ion-view>

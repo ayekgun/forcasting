@@ -1,0 +1,18 @@
+<ion-view view-title="Grafik">
+  <ion-content>
+    <div class="card"> 
+      <label class="item">
+        <h2 class="input-label ">Total Pemasukan : {{totalBulan}} </h2>
+      </label> 
+    </div>
+    <div class="card">
+        <div class="item item-divider">
+            Detil Grafik Pemasukan
+        </div>
+        <div class="item item-text-wrap">
+            <canvas id="dougnuth" class="chart chart-doughnut" chart-data="dataDetilBulan" chart-labels="labelsdataDetilBulan" chart-colours="dataDetilWarna">
+            </canvas>             
+        </div>        
+    </div>
+</ion-content>
+</ion-view>

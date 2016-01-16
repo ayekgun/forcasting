@@ -1,0 +1,27 @@
+<ion-view view-title="Grafik Pemasukan dan Pengeluaran Per-Bulan">
+  <ion-content >
+    <div class="card"> 
+      <label class="item">
+        <h2 class="input-label ">Total Pengeluaran : {{totalBulan}} </h2>
+      </label> 
+    </div>
+    <div class="card">
+        <div class="item item-divider">
+            Pemasukan Chart
+        </div>
+        <div class="item item-text-wrap">
+            <canvas id="pie" class="chart chart-pie" chart-data="datas" chart-labels="labels"  chart-click="onClick">
+            </canvas> 
+        </div>        
+    </div> 
+    <div class="card">
+        <div class="item item-divider">
+            Pengeluaran Chart
+        </div>
+        <div class="item item-text-wrap">
+            <canvas id="pie" class="chart chart-pie" chart-data="datasP" chart-labels="labelsP"  chart-click="onClicks">
+            </canvas> 
+        </div>        
+    </div>
+</ion-content>
+</ion-view>

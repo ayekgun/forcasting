@@ -1,0 +1,53 @@
+<ion-view view-title="Daftar Pengeluaran">
+    <ion-nav-buttons side="right" >         
+          <button class="button button-icon icon ion-plus-round" ng-click="pengeluaran()">        
+          </button>
+    </ion-nav-buttons>
+    <!-- <ion-nav-buttons side="">
+          <button class=" item-icon-right button button-icon icon ion-trash-a" ng-click="pemasukan()">        
+          </button>
+    </ion-nav-buttons>  -->
+  <ion-content>
+    <!-- <div class="item tabs tabs-secondary tabs-icon-left">
+    <a class="tab-item" ng-click="pemasukan()">
+    <i class="icon ion-android-add "></i>
+            Input Pemasukan
+    </a>  
+    </div> -->
+    <ion-list show-delete="data.showDelete" can-swipe="on-swipe-rigth" >
+      <ion-item ng-repeat="pengeluaran in pengeluarans" ng-click="getPengeluaran(pengeluaran.id)">
+        <div class="row">
+            <div class="col-10">
+            <button class="button"  style="background-color: {{pengeluaran.warna}} ; color: #fff; font-size: bold;">
+                {{pengeluaran.nama}}                
+            </button>           
+            </div>
+            <div class="col-10">                
+                 {{pengeluaran.namaKategori}}
+            </div>            
+            <div class="col-10">                
+                 {{pengeluaran.nama}}
+            </div>            
+            <div class="col-10">                
+                {{pengeluaran.jumlah}}
+            </div>            
+            <div class="col-10">                
+                    {{pengeluaran.tanggal|dates}}                             
+            </div>
+            
+            <div class=>
+              <ion-delete-button class="ion-minus-circled " 
+                             ng-click="onItemDelete(item)">
+              </ion-delete-button>
+            </div>
+            
+                        
+       </div>
+       <!-- <div class=" row item-icon-right" ng-click="doDeletePemasukan()">
+              <button class="button button-icon icon ion-trash-a ">        
+            </button>                         
+       </div>     -->       
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>
