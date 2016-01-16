@@ -64,10 +64,7 @@ angular.module('detil-grafik.controllers', ['chart.js','ionic','ionic-color-pick
 
                }, function (err) {
                  console.error(err);
-          });
-
-        
-        
+          });        
       
         $scope.labelsdataDetilBulan = pemasukanKategori;
         $scope.dataDetilBulan = pemasukanNilai;
@@ -76,38 +73,74 @@ angular.module('detil-grafik.controllers', ['chart.js','ionic','ionic-color-pick
         $scope.labelsdataDetilBulanP = pengeluaranKategori;
         $scope.dataDetilBulanP = pengeluaranNilai;
         $scope.dataDetilWarnaP = pengeluaranWarna;
+//****************************************************************************//
+          var totals = 0;
+          var tbg = 0;
+          var pemasukantabung = [];
+          $scope.totalpem = 0;          
+          
+          var totalsP = 0;          
+          
+  
+  
+          var cariBulan = "2000-"+$stateParams.bln+"20";
+          var filterBln = $filter('date')(new Date(cariBulan), "MM");
+          var queryx = "SELECT sum(pemasukan.jumlah) totpem, sum(pemasukan.tabung) tbpem, substr(pemasukan.tanggal,6,2) as tg FROM pemasukan where substr(tanggal, 6, 2)='"+filterBln+"' ";
+          var data =  $cordovaSQLite.execute(db, queryx).then(function(res) {
+              if(res.rows.length > 0) {            
+                     for(i=0;i<res.rows.length;i++){
+                         var t = $filter('number')(new Number(res.rows.item(i).tbpem));                
+                         //pemasukantabung[i] = t;                                  
+                         totals += (res.rows.item(i)).totpem;
+                         tbg += (res.rows.item(i).tbpem);                         
+                         } 
 
-        // $scope.warning = function(){
-        //   var total = 0;
-        //   var totalP = 0;
-        //   var cariBulan = "2000-"+$stateParams.bln+"20";
-        //   var filterBlnP = $filter('date')(new Date(cariBulanP), "MM");
-        //   //var totjum = [];
-        //   //var jumlah = "SELECT d.tot f, d.tg as u, sum(c.jumlah) tt, c.tanggal as yy from pengeluaran c  inner join (SELECT sum(a.jumlah) as tot, substr(a.tanggal,6,2) as tg FROM pemasukan a) d on d.tg = yy group by yy";
-        //   var jumlah = "SELECT substr(tanggal, 6,2) as tg, sum(jumlah) as tot from (SELECT tanggal, jumlah FROM pemasukan union all SELECT tanggal, jumlah FROM pengeluaran ) b group by  "
-        //   var data =  $cordovaSQLite.execute(db, jumlah).then(function(res) {
-        //       if(res.rows.length > 0) {            
-        //              for(i=0;i<res.rows.length;i++){                    
-        //                  total  += (res.rows.item(i)).tot;
-        //                  //totalP += (res.rows.item(i)).;
-        //                  console.log(total);
-        //                  //console.log(totalP);
-        //              }                                                                                        
-        //              $scope.totjum = total;
-        //              $scope.totjumP = totalP;
-        //              //var j = parseInt()
-        //              console.log($scope.totjum);
-        //              //console.log($scope.totjumP);      
-        //          } else {
-        //              console.log("No results found");
-        //          }           
+                          var queryx = "SELECT sum(pengeluaran.jumlah) totpeng, substr(pengeluaran.tanggal,6,2) as tg FROM pengeluaran where substr(tanggal, 6, 2)='"+filterBln+"' ";
+                          var data =  $cordovaSQLite.execute(db, queryx).then(function(res) {
+                               if(res.rows.length > 0) {            
+                                       for(i=0;i<res.rows.length;i++){
+                                           totalsP += (res.rows.item(i)).totpeng;
+                                           }
 
-        //        }, function (err) {
-        //          console.error(err);
-        //   });
-        //   //console.log($scope.totjum);
+                                        $scope.totalpeng = totalsP;
+                                        console.log($scope.totalpeng);
+                                        $scope.totalpem = totals;
+                                        $scope.totaltb = tbg;
+                                        console.log($scope.totalpem);
+                                        console.log($scope.totaltb);
+                                        var makspeng = parseInt($scope.totalpem) * 80;
+                                        var makspeng2 = makspeng / 100;                                        
+                                        var tbg_peng = parseInt($scope.totalpeng) + parseInt($scope.totaltb);
+                                        var sisa = parseInt($scope.totalpem) - tbg_peng;
+                                        $scope.sisa = sisa;
+                                        if (tbg_peng > makspeng2) {
+                                              var pesan = "Uang Anda Sekarat"                                          
+                                        }
+                                        else { 
+                                          var pesan = "Uang Anda Sehat"
+                                        }
+                                        $scope.pesan = pesan;
+                                   } else {
+                                       console.log("No results found");
+                                   }           
 
-        // };
-        //$scope.warning();
+                                 }, function (err) {
+                                   console.error(err);
+                            });                                                                  
+                     
+                     // $scope.totalpem = totals;
+                     // $scope.totaltb = tbg;
+                     // console.log($scope.totalpem);
+                     // console.log($scope.totaltb);
+                      //console.log($scope.totalpeng);
+                     //var warning = parseInt($scope.totalpem);
+                     //console.log(warning);      
+                 } else {
+                     console.log("No results found");
+                 }           
+
+               }, function (err) {
+                 console.error(err);
+          });
 
 })
