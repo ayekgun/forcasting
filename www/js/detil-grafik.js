@@ -1,7 +1,8 @@
 angular.module('detil-grafik.controllers', ['chart.js','ionic','ionic-color-picker'])
 .controller('detil-grafikCtrl',function($scope,$ionicModal, $ionicPopup,$cordovaSQLite, $stateParams,$filter, $rootScope){
        //routing detilbulan data
-      //$rootScope.totalBulan = 0;      
+      //$rootScope.totalBulan = 0;
+      // cuman percobaan gitttt      
       $scope.totalBulanP = 0;
             
 
