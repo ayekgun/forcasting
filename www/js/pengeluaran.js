@@ -191,7 +191,7 @@ angular.module('pengeluaran.controllers', ['chart.js','ionic','ionic-color-picke
 
   $scope.listPengeluaran = function (){      
     //Fungsi Select Pemasukan
-        var query = "SELECT pengeluaran.*,kategoripengeluaran.warna,kategoripengeluaran.nama FROM pengeluaran left join kategoripengeluaran on pengeluaran.kategori=kategoripengeluaran.id order by pengeluaran.id desc";
+        var query = "SELECT pengeluaran.*,pengeluaran.nama as ket ,kategoripengeluaran.warna,kategoripengeluaran.nama FROM pengeluaran left join kategoripengeluaran on pengeluaran.kategori=kategoripengeluaran.id order by pengeluaran.id desc";
         var data =  $cordovaSQLite.execute(db, query).then(function(res) {
             if(res.rows.length >= 0) {
                 //console.log("SELECTED -> " + res.rows.item(0).nama_pemasukan + " " + res.rows.item(0).jumlah);                
@@ -199,6 +199,7 @@ angular.module('pengeluaran.controllers', ['chart.js','ionic','ionic-color-picke
                     var nama = res.rows.item(i).nama;                                                                            
                     data[i] = {
                                 'id' : res.rows.item(i).id, 
+                                'keterangan' : res.rows.item(i).ket, 
                                 'jumlah' : res.rows.item(i).jumlah,
                                 'tabung' : res.rows.item(i).tabung,
                                 'tanggal' : res.rows.item(i).tanggal,

@@ -339,13 +339,119 @@ $ionicModal.fromTemplateUrl('templates/tambah.html', {
 //    };
 //   })
 
-.controller('forecastCtrl',function($scope, $ionicModal, $timeout , $ionicPopup){
-  //forecast grafik
-  $scope.labels = ["January", "February", "March", "April", "May", "June", "July"];
-  $scope.series = ['Series A', 'Series B'];
-  $scope.data = [
-      [65, 59, 80, 81, 56, 55, 40],
-      [28, 48, 40, 19, 86, 27, 90]
-    ]; 
+.controller('forecastCtrl',function($scope, $ionicModal, $timeout , $ionicPopup,$cordovaSQLite, $filter){
+    var bulan = [];
+    var pengeluaranY = [];
+    var x=[];
+    var xy=[];
+    var x2=[];
+
+    var total_pengeluaranY = 0;
+    var total_x = 0;
+    var total_xy = 0;
+    var total_x2 = 0;
+    var dataKu = [];
+    var lastMonth = '';
+
+
+    var query = "SELECT pengeluaran.*,sum(pengeluaran.jumlah) as total,substr(tanggal, 1, 7) grouBln FROM pengeluaran group by grouBln";
+    var data =  $cordovaSQLite.execute(db, query).then(function(res) {
+     if(res.rows.length > 0) {
+        var jumdata = res.rows.length;      
+        var std = jumdata/2;
+        var isGanjil = (jumdata%2);
+        var sxd = -(Math.floor(std)+1);
+
+        for(i=0;i<jumdata;i++){
+          //format bulan
+          bulan[i] = $filter('date')(new Date(res.rows.item(i).tanggal), "MMMM");
+          //mencari bulan terakhir
+          lastMonth = new Date(res.rows.item(i).tanggal);
+          //hitungan pengeluaran        
+          pengeluaranY[i] = res.rows.item(i).total;
+          total_pengeluaranY += res.rows.item(i).total;
+
+          //mulai hitungan X
+          sxd+=1 ;
+          if(sxd==0 && isGanjil==0){
+              sxd = 1;
+          }
+          x[i] = sxd;
+          total_x +=sxd;
+          //end of hitungan X
+
+          //mulai hitungan XY               
+          var tsxd = (res.rows.item(i).total*sxd);
+          xy[i] = tsxd;
+          total_xy +=tsxd;
+          //end of hitungan XY
+
+          //mulai hitungan XY               
+          var tx2 = (sxd*sxd);
+          x2[i] = tx2;
+          total_x2 +=tx2;        
+          //end of hitungan XY
+
+          dataKu[i] = {
+              'bulan' : bulan[i],
+              'pengeluaranX' : pengeluaranY[i],
+              'X' : x[i],
+              'XY' : xy[i],
+              'X2' : x2[i],
+          };
+        }
+
+        var hasil1 = total_pengeluaranY/jumdata; // rumus : a = ∑ Y / n 
+        var hasil2 = Math.round(total_xy/total_x2); // rumus : b = ∑ (XY) / ∑ X2
+        var hasil3 = Math.round(hasil1+hasil2*12); // rumus : Y = a + bX
+        
+        /**
+         * check data         
+          console.log("data row");
+          console.log(bulan);
+          console.log(pengeluaranY); // Pengeluaran Y
+          console.log(x); // X
+          console.log(xy); // XY
+          console.log(x2); // X2
+
+          console.log("jumlah total row");
+          console.log(total_pengeluaranY);
+          console.log(total_x);
+          console.log(total_xy);
+          console.log(total_x2);
+          
+          console.log("hasil");
+          console.log(hasil1); //a = ∑ Y / n 
+          console.log(hasil2); //b = ∑ (XY) / ∑ X2
+          console.log(hasil3); //Y = a + bX
+          
+          //cek data
+          console.log(dataKu);
+          * 
+         */
+          
+          //bulan ditambah 1
+          lastMonth.setMonth( lastMonth.getMonth() + 1 );
+          lastMonth = ( lastMonth.getMonth() + 1 ) + '/' + lastMonth.getDate() + '/' + lastMonth.getFullYear();
+          //tanggal di format mjd nama bulan
+          var blnForecast = $filter('date')(new Date(lastMonth), "MMMM");
+          //menggabungkan array dari data dan perhitungan forecast
+          Array.prototype.push.apply(bulan, [blnForecast]);
+          Array.prototype.push.apply(pengeluaranY,[hasil3]);
+          
+          //forecast grafik
+          $scope.labels = bulan;
+          $scope.series = ['Forecast'];
+          $scope.data = [pengeluaranY];
+          
+          $scope.bulanKet = blnForecast;
+          $scope.forecastJumlah = hasil3;
+
+     } else {
+         console.log("No results found");
+     }
+    }, function (err) {
+        console.error(err);
+    }); 
 
 });
