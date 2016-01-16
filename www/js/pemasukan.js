@@ -52,15 +52,19 @@ angular.module('pemasukan.controllers', ['chart.js','ionic','ionic-color-picker'
 
   $scope.doUpdatePemasukan = function(){
     var data = $scope.pemasukanData;
-     var t = $filter('number')(new Number(data.tabung) / 100);
-     var tt = $filter('number')(new Number(t)* (data.jumlah));    
+    var data = $scope.pemasukanData;            
+    var d = $filter('date')(new Date(data.tanggal), "yyyy-MM-dd");
+    var t = data.tabung * data.jumlah;
+    var tt = t / 100;
+    var ttt = data.jumlah - tt;    
     var dataDetil = [];
     var d = $filter('date')(new Date(data.tanggal), "yyyy-MM-dd");
     var query = "INSERT OR REPLACE INTO pemasukan (id, jumlah, toggle, tabung, tanggal, kategori)" + "VALUES (?,?,?,?,?,?)";    
-    var data =  $cordovaSQLite.execute(db, query , [data.id, data.jumlah, data.toggle, tt, d, data.kategori]).then(function(res) {
+    var data =  $cordovaSQLite.execute(db, query , [data.id, data.jumlah, data.toggle, ttt, d, data.kategori]).then(function(res) {
             if(res.rows.length > 0) {                
                 for(i=0;i<res.rows.length;i++){
-                    dataDetil = res.rows.item(i);          
+                    dataDetil = res.rows.item(i);
+                              
                 }                
                 $scope.pemasukanData = dataDetil;                
             } else {
@@ -120,9 +124,11 @@ angular.module('pemasukan.controllers', ['chart.js','ionic','ionic-color-picker'
                                 'namaKategori' : nama,                                  
                                 'warna' : res.rows.item(i).warna,
                             };
+                            //console.log(res.rows.item(i).tabung;
                 }                
                 $scope.pemasukans = data;  
-                console.log(data);              
+                console.log(data);
+
             }
             else {
                 console.log("No results found");
@@ -157,19 +163,22 @@ angular.module('pemasukan.controllers', ['chart.js','ionic','ionic-color-picker'
 
 $scope.doSavePemasukan = function() {
 
-            var data = $scope.pemasukanData;
+            var data = $scope.pemasukanData;            
             var d = $filter('date')(new Date(data.tanggal), "yyyy-MM-dd");
-            var t = $filter('number')(new Number(data.tabung) / 100);
-            var tt = $filter('number')(new Number(t) * (data.jumlah));
+            var t = data.tabung * data.jumlah;
+            var tt = t / 100;
+            var ttt = data.jumlah - tt;
+            console.log(ttt);                       
+            //var tt = $filter('number')(new Number(t) * (data.jumlah));
             var query = "INSERT INTO pemasukan (jumlah, toggle, tabung, tanggal, kategori) VALUES (?,?,?,?,?)";
-            $cordovaSQLite.execute(db, query, [data.jumlah, data.toggle, tt, d, data.kategori]).then(function(res) {
+            $cordovaSQLite.execute(db, query, [data.jumlah, data.toggle, ttt, d, data.kategori]).then(function(res) {
                 console.log("INSERT ID -> " + res.insertId);
                 var alertPopup = $ionicPopup.alert({
                     title: 'Success',
                     template: 'data '+res.insertId+' berhasil disimpan'
                 });
                 $scope.getKategoriList(); 
-                $scope.listPemasukan();               
+                $scope.listPemasukan();                               
                 $scope.pemasukanModal.hide();    
             }, function (err) {
                 console.error(err);
