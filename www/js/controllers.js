@@ -438,11 +438,14 @@ $ionicModal.fromTemplateUrl('templates/tambah.html', {
           //menggabungkan array dari data dan perhitungan forecast
           Array.prototype.push.apply(bulan, [blnForecast]);
           Array.prototype.push.apply(pengeluaranY,[hasil3]);
-
+          
           //forecast grafik
           $scope.labels = bulan;
           $scope.series = ['Forecast'];
           $scope.data = [pengeluaranY];
+          
+          $scope.bulanKet = blnForecast;
+          $scope.forecastJumlah = hasil3;
 
      } else {
          console.log("No results found");
