@@ -127,16 +127,19 @@ $ionicModal.fromTemplateUrl('templates/tambah.html', {
        var bulan = [];
        var sumtotal = [];
        var total = 0;
+       var i = 0;
+       sumtotal[i]  = 0;        
 
        var gb = "";
        var bulanP = [];
        var sumtotalP = [];
        var totalP = 0;
 
+
        var query = "SELECT pemasukan.*,sum(pemasukan.jumlah) as total,substr(tanggal, 1, 7) grouBln FROM pemasukan group by grouBln";
        var data =  $cordovaSQLite.execute(db, query).then(function(res) {
            if(res.rows.length > 0) {                
-               for(i=0;i<res.rows.length;i++){                    
+               for(i=0;i<res.rows.length;i++){                                      
                   sumtotal[i] = res.rows.item(i).total;
                   // total += (res.rows.item(i)).total;                                    
                   bulan[i] = $filter('date')(new Date(res.rows.item(i).tanggal), "MMMM");

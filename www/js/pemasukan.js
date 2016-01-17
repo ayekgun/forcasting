@@ -28,13 +28,25 @@ angular.module('pemasukan.controllers', ['chart.js','ionic','ionic-color-picker'
   };
 
   $scope.getPemasukan = function(id) {
-
-        var dataDetil= [];        
+        var dataDetil= [];
         var query = "SELECT * FROM pemasukan where id ="+id;
         var data =  $cordovaSQLite.execute(db, query).then(function(res) {
             if(res.rows.length > 0) {                
                 for(i=0;i<res.rows.length;i++){
-                    dataDetil = res.rows.item(i);          
+                    //dataDetil = res.rows.item(i);
+                    var j = res.rows.item(i).jumlah;
+                    var t = res.rows.item(i).tabung;
+                    var tt = t * 100;
+                    var ttt = tt / j; 
+                    console.log(ttt);
+                    //dataDetil = res.rows.item(i);
+                    dataDetil = {
+                                'id' : res.rows.item(i).id,                                                  
+                                'jumlah' : res.rows.item(i).jumlah,                                
+                                'tabung' : ttt,
+                                'tanggal' : res.rows.item(i).tanggal,
+                                'kategori' : res.rows.item(i).kategori,
+                             };          
                 }                
                 $scope.pemasukanData = dataDetil;                
             } else {
@@ -51,16 +63,15 @@ angular.module('pemasukan.controllers', ['chart.js','ionic','ionic-color-picker'
     };   
 
   $scope.doUpdatePemasukan = function(){
-    var data = $scope.pemasukanData;
     var data = $scope.pemasukanData;            
     var d = $filter('date')(new Date(data.tanggal), "yyyy-MM-dd");
     var t = data.tabung * data.jumlah;
     var tt = t / 100;
-    var ttt = data.jumlah - tt;    
+    //var ttt = data.jumlah - tt;    
     var dataDetil = [];
     var d = $filter('date')(new Date(data.tanggal), "yyyy-MM-dd");
     var query = "INSERT OR REPLACE INTO pemasukan (id, jumlah, toggle, tabung, tanggal, kategori)" + "VALUES (?,?,?,?,?,?)";    
-    var data =  $cordovaSQLite.execute(db, query , [data.id, data.jumlah, data.toggle, ttt, d, data.kategori]).then(function(res) {
+    var data =  $cordovaSQLite.execute(db, query , [data.id, data.jumlah, data.toggle, tt, d, data.kategori]).then(function(res) {
             if(res.rows.length > 0) {                
                 for(i=0;i<res.rows.length;i++){
                     dataDetil = res.rows.item(i);
@@ -167,11 +178,11 @@ $scope.doSavePemasukan = function() {
             var d = $filter('date')(new Date(data.tanggal), "yyyy-MM-dd");
             var t = data.tabung * data.jumlah;
             var tt = t / 100;
-            var ttt = data.jumlah - tt;
-            console.log(ttt);                       
+            //var ttt = data.jumlah - tt;
+            //console.log(ttt);                       
             //var tt = $filter('number')(new Number(t) * (data.jumlah));
             var query = "INSERT INTO pemasukan (jumlah, toggle, tabung, tanggal, kategori) VALUES (?,?,?,?,?)";
-            $cordovaSQLite.execute(db, query, [data.jumlah, data.toggle, ttt, d, data.kategori]).then(function(res) {
+            $cordovaSQLite.execute(db, query, [data.jumlah, data.toggle, tt, d, data.kategori]).then(function(res) {
                 console.log("INSERT ID -> " + res.insertId);
                 var alertPopup = $ionicPopup.alert({
                     title: 'Success',
