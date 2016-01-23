@@ -43,9 +43,11 @@ angular.module('detil-grafik.controllers', ['chart.js','ionic','ionic-color-pick
                  console.error(err);
           });
           
-          var cariBulanP = "2000-"+$stateParams.blnP+"20";
+          var cariBulanP = "2000 "+$stateParams.blnP+" 20";
+        
           var filterBlnP = $filter('date')(new Date(cariBulanP), "MM");
-          var queryY = "SELECT pengeluaran.*,sum(pengeluaran.jumlah) totalP,kategori.warna,kategori.nama namaKtgP ,substr(pengeluaran.tanggal,6,2) as tgP FROM pengeluaran join kategori on pengeluaran.kategori=kategori.id where substr(tanggal, 6, 2)='"+filterBlnP+"' group by kategori.id";
+          var queryY = "SELECT pengeluaran.*,sum(pengeluaran.jumlah) totalP,kategoripengeluaran.warna,kategoripengeluaran.nama namaKtgP ,substr(pengeluaran.tanggal,6,2) as tgP FROM pengeluaran join kategoripengeluaran on pengeluaran.kategori=kategoripengeluaran.id where substr(tanggal, 6, 2)='"+filterBlnP+"' group by kategoripengeluaran.id";
+          
           var data =  $cordovaSQLite.execute(db, queryY).then(function(res) {
               if(res.rows.length > 0) {            
                      for(i=0;i<res.rows.length;i++){                    
@@ -83,7 +85,7 @@ angular.module('detil-grafik.controllers', ['chart.js','ionic','ionic-color-pick
           
   
   
-          var cariBulan = "2000-"+$stateParams.bln+"20";
+          var cariBulan = "2000-"+$stateParams.bln+"-20";
           var filterBln = $filter('date')(new Date(cariBulan), "MM");
           var queryx = "SELECT sum(pemasukan.jumlah) totpem, sum(pemasukan.tabung) tbpem, substr(pemasukan.tanggal,6,2) as tg FROM pemasukan where substr(tanggal, 6, 2)='"+filterBln+"' ";
           var data =  $cordovaSQLite.execute(db, queryx).then(function(res) {
