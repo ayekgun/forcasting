@@ -1,5 +1,15 @@
 angular.module('pie-chart.controllers', ['chart.js','ionic','ionic-color-picker'])
 .controller('pie-chartCtrl',function($scope,$ionicModal, $ionicPopup,$cordovaSQLite,$state,$stateParams,$filter){
+      
+      $scope.Portrait = function() {
+        screen.unlockOrientation('portrait');
+      }
+      
+      $scope.chartTabShow = false;
+      $scope.showChartAvaliable = function() {
+            $scope.chartTabShow = $scope.chartTabShow == false ? true : false;
+      };
+
       var pemasukanLabels = [];
       var pemasukanNilai = [];
       var pemasukantotal = 0;      

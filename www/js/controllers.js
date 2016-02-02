@@ -1,47 +1,4 @@
-angular.module('starter.controllers', ['chart.js','ionic','ionic-color-picker'])
-
-.controller('AppCtrl', function($scope, $ionicModal, $timeout , $ionicPopup) {
-
-  // With the new view caching in Ionic, Controllers are only called
-  // when they are recreated or on app start, instead of every page change.
-  // To listen for when this page is active (for example, to refresh data),
-  // listen for the $ionicView.enter event:
-  //$scope.$on('$ionicView.enter', function(e) {
-  //});
-
-  
-  // Triggered in the login modal to close it
-
-  $scope.closeLogin = function() {
-    $scope.loginModal.hide();
-    $ionicPopup.alert({
-              title: 'Success',
-              content: 'Anda Berhasil Hello World!!!'
-            }).then(function(res) {
-              console.log('Test Alert Box');
-            });    
-  };
-
-  
-
-  
-  // Create the login modal that we will use later
-  
-  
-  //*******************************************************************************************
-  //* end proses pengeluaran
-
-  // Cleanup the modal when we're done with it!
-  $scope.$on('$destroy', function() {
-      $scope.loginModal.remove();
-      $scope.pengeluaranModal.remove();
-      $scope.pemasukanModal.remove();
-      $scope.tambahModal.remove();
-
-  });
-
-
-})
+angular.module('starter.controllers', ['chart.js','ionic','ionic-color-picker','starter.services'])
 
 
 .controller('popoverCtrl', function($scope, $ionicPopover) {
@@ -81,29 +38,37 @@ angular.module('starter.controllers', ['chart.js','ionic','ionic-color-picker'])
   });
 })
 
-.factory("items", function(){
-  var items = {};
-  items.isi=[
-    { title: 'makan', jumlah: 2000, id: 1 },
-    { title: 'minum', jumlah: 2000, id: 2 },
-    { title: 'ngopi', jumlah: 2000, id: 3 },
-    { title: 'burjo', jumlah: 2000, id: 4 },
-    { title: 'Rap',   jumlah: 0, id: 5 },
-    { title: 'Cowbe', jumlah: null, id: 6 }
-  ];
-  return items;
-})
 
-.controller('PlaylistsCtrl', function($scope, items) {
-  $scope.items = items;
-  $scope.addItem = function (index) {
-        items.isi.push({            
-            title: $scope.newItemName
+.controller('LoginCtrl', function($scope, LoginService, $ionicPopup, $state) {
+    $scope.data = {};
+ 
+    $scope.login = function() {
+        LoginService.loginUser($scope.data.username, $scope.data.password).success(function(data) {
+            $state.go('app.home');
+        }).error(function(data) {
+            var alertPopup = $ionicPopup.alert({
+                title: 'Login failed!',
+                template: 'Please check your credentials!'
+            });
         });
     }
 })
 
-.controller('tambahCtrl',function($scope, $ionicModal, $timeout , $ionicPopup, $cordovaSQLite,$filter){
+.controller( 'daftarCtrl', function ($scope, StorageService) {
+  $scope.things = StorageService.getAll();
+
+  $scope.add = function (newThing,newThing2) {
+    StorageService.add(newThing);
+    StorageService.add(newThing2);
+  };
+
+  $scope.remove = function (thing) {
+    StorageService.remove(thing);
+  };
+})
+
+
+.controller('tambahCtrl',function($scope, $ionicModal, $timeout , $ionicPopup, $cordovaSQLite, $filter, $state, $window){
 $ionicModal.fromTemplateUrl('templates/tambah.html', {    
     scope: $scope,
     animation: 'slide-in-up'
@@ -123,6 +88,28 @@ $ionicModal.fromTemplateUrl('templates/tambah.html', {
    $scope.$on('$destroy', function() {      
       $scope.tambahModal.remove();
   });
+
+   $scope.refresh = function(){
+    window.location = "#/app/home";
+     // $window.location.reload(true);
+    // $state.go($state.current, {}, {reload: true});
+    $scope.$broadcast('scroll.refreshComplete');
+  };
+  // $scope.$broadcast('scroll.refreshComplete');
+  
+   $scope.Portrait = function() {
+      screen.unlockOrientation('portrait');
+  }
+
+  $scope.chartTabShow = false;
+  $scope.showChartAvaliable = function() {
+            $scope.chartTabShow = $scope.chartTabShow == false ? true : false;
+  };
+  
+       
+  // $scope.doRefresh = function (){
+
+       // $scope.chartTabShow = false;
        
        var bulan = [];
        var sumtotal = [];
@@ -158,7 +145,7 @@ $ionicModal.fromTemplateUrl('templates/tambah.html', {
                          }
                       }, function (err) {
                          console.error(err);
-                      });
+                      });                      
                }               
            } else {
                console.log("No results found");
@@ -166,21 +153,17 @@ $ionicModal.fromTemplateUrl('templates/tambah.html', {
        }, function (err) {
            console.error(err);
        });
+       $scope.$broadcast('scroll.refreshComplete');        
 
-       
-   //console.log();
        $scope.labels = bulan;
        $scope.series = ['Pemasukan','Pengeluaran'];
        $scope.colour = ['#00FF00','#FF0000'];
-       $scope.datass = [sumtotal,sumtotalP];       
+       $scope.datass = [sumtotal,sumtotalP];
 
+  // };
+  // $scope.doRefresh();
 })
-
-
-.controller('PlaylistCtrl', function($scope, $stateParams) {
-})
-
-  //color pic
+ 
 .controller('MainCtrl', function($scope,$http, $ionicModal, $timeout , $ionicPopup, $cordovaSQLite, $stateParams){
     $scope.doSaveKategori = function() {            
 
@@ -217,99 +200,9 @@ $ionicModal.fromTemplateUrl('templates/tambah.html', {
             });
     };
 
-  // $scope.kategori = {
-  //    first : null,
-  //    warna : null,
-  //    third : null
-  // };
-
-  // $scope.customColors = {
-  //   "redcanaglia" : "#ff0000",
-  //   "canaryblue" : "#33ffff"
-  // };
+  
 })
 
-// .controller('grafikCtrl',function($scope,$ionicModal, $ionicPopup,$cordovaSQLite,$state,$stateParams,$filter){
-//       $scope.showchart=true;
-//       $scope.hidechart=false;
-      
-//       var dataLabels = [];
-//       var dataNilai = [];
-//       var total = 0;      
-//       var arr=[];
-
-//       var queryx = "SELECT pemasukan.*,sum(pemasukan.jumlah) total,substr(tanggal, 1, 7) grouBln FROM pemasukan join kategori on pemasukan.kategori=kategori.id group by grouBln";
-//       var data =  $cordovaSQLite.execute(db, queryx).then(function(res) {
-//              if(res.rows.length > 0) {            
-//                  for(i=0;i<res.rows.length;i++){                    
-//                   var b = $filter('date')(new Date(res.rows.item(i).tanggal), "MMMM");                
-//                      dataLabels[i] = b;
-//                      total += res.rows.item(i).total;                                 
-//                      arr[b] = total;
-//                      dataNilai[i] = res.rows.item(i).total;                   
-//                  }                                                                   
-//                  // $scope.totalBulanArr = arr;
-//                  // console.log(arr); 
-//              } else {
-
-//                  console.log("No results found");
-//              }           
-
-//            }, function (err) {
-//              console.error(err);
-//       });        
-      
-//       // console.log(arr);
-//       $scope.labels = dataLabels;
-//       $scope.datas = dataNilai;    
-
-
-      
-
-//       $scope.onClick = function (points, evt) {  
-//         var labelClick = points[0]['label'];                  
-//         $state.go('app.detilbulan',{'bln' : labelClick });
-//       };
-
- 
-
-// })
-// .controller('donatCtrl',function($scope,$ionicModal, $ionicPopup,$cordovaSQLite, $stateParams,$filter){
-//        //routing detilbulan data
-//       $scope.totalBulan = 0;      
-
-//           var dataLabels = [];
-//           var dataNilai = [];
-//           var dataWarna = [];
-//           var dataKategori = [];
-//           var total = 0;
-
-//           var cariBulan = "2000-"+$stateParams.bln+"20";
-//           var filterBln = $filter('date')(new Date(cariBulan), "MM");
-//           var queryx = "SELECT pemasukan.*,sum(pemasukan.jumlah) total,kategori.warna,kategori.nama namaKtg ,substr(pemasukan.tanggal,6,2) as tg FROM pemasukan join kategori on pemasukan.kategori=kategori.id where substr(tanggal, 6, 2)='"+filterBln+"' group by kategori.id";
-//           var data =  $cordovaSQLite.execute(db, queryx).then(function(res) {
-//               if(res.rows.length > 0) {            
-//                      for(i=0;i<res.rows.length;i++){                    
-//                          dataLabels[i] = $filter('date')(new Date(res.rows.item(i).tanggal), "MMMM");                
-//                          total += (res.rows.item(i)).total;
-//                          dataNilai[i] = res.rows.item(i).total;                   
-//                          dataWarna[i] = res.rows.item(i).warna;                   
-//                          dataKategori[i] = res.rows.item(i).namaKtg;
-//                      }                                                                   
-//                      $scope.totalBulan = total;      
-//                  } else {
-//                      console.log("No results found");
-//                  }           
-
-//                }, function (err) {
-//                  console.error(err);
-//           });
-      
-//         $scope.labelsdataDetilBulan = dataKategori;
-//         $scope.dataDetilBulan = dataNilai;
-//         $scope.dataDetilWarna = dataWarna;
-
-// })
 .directive("formatDate", function(){
   return {
    require: 'ngModel',
@@ -332,17 +225,16 @@ $ionicModal.fromTemplateUrl('templates/tambah.html', {
    };
   })
 
-// .filter('tetap', function($filter){
-//    return function(input){
-//     if(input == false){ return "tetap"; }
-//     var _tetap = $filter('tetap')(new toggle(input), 'tetap');
-   
-//     return _tetap.toUpperCase();    
-    
-//    };
-//   })
-
 .controller('forecastCtrl',function($scope, $ionicModal, $timeout , $ionicPopup,$cordovaSQLite, $filter){
+    $scope.Portrait = function() {
+      screen.unlockOrientation('portrait');
+    }
+
+    $scope.chartTabShow = false;
+      $scope.showChartAvaliable = function() {
+            $scope.chartTabShow = $scope.chartTabShow == false ? true : false;
+    };
+
     var bulan = [];
     var pengeluaranY = [];
     var x=[];

@@ -5,7 +5,8 @@
            <i class="item-icon icon-left ion-ios-pulse-strong padding-right"></i> Estimasi Pengeluaran
         </div>
         <label class="item">
-          <h2 class="input-label ">Forecast Pengeluaran Untuk Bulan {{bulanKet}} Adalah Rp {{forecastJumlah}} </h2>
+          <h2 class="input-label ">Forecast Pengeluaran Untuk Bulan {{bulanKet}}  </h2>
+          <h2 class="input-label ">Adalah Rp {{forecastJumlah}} </h2>
         </label> 
     </div>
     <div class="card">
@@ -15,9 +16,10 @@
         <div class="item item-text-wrap">
             <canvas id="line" class="chart chart-line" chart-data="data"
               chart-labels="labels" chart-legend="true" chart-series="series"
-              chart-click="onClick" >
+              chart-click="onClick" ng-if="chartTabShow">
             </canvas> 
         </div>        
     </div>
+    <button class="button button-block button-positive" ng-click="showChartAvaliable()">Tampilkan Grafik</button>
 </ion-content>
 </ion-view>

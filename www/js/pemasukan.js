@@ -1,6 +1,14 @@
 angular.module('pemasukan.controllers', ['chart.js','ionic','ionic-color-picker'])  
 
-.controller('pemasukanCtrl',function($scope,$http, $ionicModal, $timeout , $ionicPopup, $cordovaSQLite, $stateParams,$filter){
+.controller('pemasukanCtrl',function($scope,$http, $ionicModal, $timeout , $ionicPopup, $cordovaSQLite, $stateParams, $filter, $ionicPlatform){
+ 
+  $scope.Landscape = function() {
+      screen.unlockOrientation('landscape');
+      console.log(screen.lockOrientation('landscape'));
+  }      
+  $scope.Portrait = function() {
+      screen.unlockOrientation('portrait');
+  }
   
   $scope.pemasukanData = {tabung : 0};
   

@@ -1,5 +1,15 @@
 angular.module('pengeluaran.controllers', ['chart.js','ionic','ionic-color-picker'])
-.controller('pengeluaranCtrl',function($scope,$http, $ionicModal, $timeout , $ionicPopup, $cordovaSQLite, $stateParams,$filter){
+.controller('pengeluaranCtrl',function($scope,$http, $ionicModal, $timeout , $ionicPopup, $cordovaSQLite, $stateParams,$filter, $ionicPlatform){
+  
+  $scope.Landscape = function() {
+      screen.unlockOrientation('landscape');
+      console.log(screen.lockOrientation('landscape'));
+  }      
+  $scope.Portrait = function() {
+      screen.unlockOrientation('portrait');
+  }
+  
+
   $scope.pengeluaranData = {};
   $scope.datas = {};
 
@@ -85,43 +95,6 @@ angular.module('pengeluaran.controllers', ['chart.js','ionic','ionic-color-picke
             console.error(err);
         });
   };
-  //menampilkan pengeluaran ke pengeluarans html
-  // var query = "SELECT * FROM pengeluaran order by id desc";
-  //       var data =  $cordovaSQLite.execute(db, query).then(function(res) {
-  //           if(res.rows.length > 0) {                                
-  //               for(i=0;i<res.rows.length;i++){
-  //                   data[i] = res.rows.item(i);
-  //               }                
-  //               $scope.pengeluarans = data;                
-  //           }
-  //           else {
-  //               console.log("No results found");
-  //           }
-  //       }, function (err) {
-  //           console.error(err);
-  //       });
-
-  //  if($stateParams.pengeluaranId){
-  //       var dataDetil= [];
-  //       var id = $stateParams.pengeluaranId;           
-  //       var query = "SELECT * FROM pengeluaran where id ="+id;
-  //       var data =  $cordovaSQLite.execute(db, query).then(function(res) {
-  //           if(res.rows.length > 0) {                
-  //               for(i=0;i<res.rows.length;i++){
-  //                   dataDetil = res.rows.item(i);          
-  //               }                
-  //               $scope.pengeluaranDetil = dataDetil;
-  //               console.log($scope.pengeluaranDetil);
-  //           } else {
-  //               console.log("No results found");
-  //           }
-  //       }, function (err) {
-  //           console.error(err);
-  //       });
-  //   }
-  // else{
-  //       console.log('params not found');
-  //   }
   
 
   $scope.doSavePengeluaran = function() {
@@ -205,7 +178,7 @@ angular.module('pengeluaran.controllers', ['chart.js','ionic','ionic-color-picke
                                 'tanggal' : res.rows.item(i).tanggal,
                                 'toggle' : res.rows.item(i).toggle,
                                 'kategori' : res.rows.item(i).kategori,
-                                'nama' : nama.substring(0,1).toUpperCase(),                                  
+                                'nama' : (nama) ? nama.substring(0,1).toUpperCase() : "-",                                  
                                 'namaKategori' : nama,                                  
                                 'warna' : res.rows.item(i).warna,
                             };

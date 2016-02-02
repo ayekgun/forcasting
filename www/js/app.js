@@ -4,11 +4,11 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
+// var db;
+
+var app = angular.module('starter', ['ionic', 'starter.controllers','ionic-color-picker','ngCordova','pemasukan.controllers','pengeluaran.controllers','pie-chart.controllers','detil-grafik.controllers'])
 var db;
-
-angular.module('starter', ['ionic', 'starter.controllers','ionic-color-picker','ngCordova','pemasukan.controllers','pengeluaran.controllers','pie-chart.controllers','detil-grafik.controllers'])
-
-.run(function($ionicPlatform, $cordovaSQLite) {
+app.run(function($ionicPlatform, $cordovaSQLite) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -16,20 +16,14 @@ angular.module('starter', ['ionic', 'starter.controllers','ionic-color-picker','
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
       cordova.plugins.Keyboard.disableScroll(true);
 
-    }
-
-    // if (window.StatusBar) {
-    //   // org.apache.cordova.statusbar required
-    //   StatusBar.styleDefault();
-    // }
-    // db = $cordovaSQLite.deleteDB("my.db"); 
-    // window.sqlitePlugin.deleteDatabase({name: "my.db", location: 1}, successcb, errorcb); 
+    }    
 
     if (window.cordova) {            
-            db = $cordovaSQLite.openDB({ name: "my.database34" }); //device
+            //db = $cordovaSQLite.openDB({ name: "my.database34" }); //device
+            db = window.sqlitePlugin.openDatabase({name: "my.database35", androidDatabaseImplementation: 2});
         }
     else{
-             db = window.openDatabase("my.database34", '1', 'my', 1024 * 1024 * 100); // browser
+             db = window.openDatabase("my.database35", '1', 'my', 1024 * 1024 * 100); // browser
         }                
         
     // $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS people (id integer primary key, firstname text, lastname text)");
@@ -40,26 +34,38 @@ angular.module('starter', ['ionic', 'starter.controllers','ionic-color-picker','
   });
 })
 
-.config(function($stateProvider, $urlRouterProvider) {
+app.config(function($stateProvider, $urlRouterProvider) {
   $stateProvider
 
     .state('app', {
     url: '/app',
     abstract: true,
-    templateUrl: 'templates/menu.html',
-    controller: 'AppCtrl'
+    templateUrl: 'templates/menu.html'
+    // controller: 'AppCtrl'
   })
 
- 
-  .state('app.playlists', {
-      url: '/playlists',
+  .state('daftar', {
+        url: '/daftar',
+        templateUrl: 'templates/daftar.html',
+        controller: 'daftarCtrl'
+  })
+
+  // .state('login', {
+  //       url: '/login',
+  //       templateUrl: 'templates/login.html',
+  //       controller: 'LoginCtrl'
+  // })
+  .state('app.login', {
+      url: '/login',
       views: {
         'menuContent': {
-          templateUrl: 'templates/playlists.html',
-          controller: 'pemasukanCtrl'
+          templateUrl: 'templates/login.html',
+          controller: 'LoginCtrl'
         }
       }
     })
+ 
+  
   .state('app.kategori-pemasukan', {
       url: '/kategori-pemasukan',
       views: {
@@ -147,17 +153,7 @@ angular.module('starter', ['ionic', 'starter.controllers','ionic-color-picker','
           controller : 'detil-grafikCtrl'         
         }
       }
-    })  
-
-  .state('app.single', {
-    url: '/playlists/:playlistId',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/playlist.html',
-        controller: 'PlaylistCtrl'
-      }
-    }
-  });
+    });
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/home');
+  $urlRouterProvider.otherwise('/daftar');
 });
