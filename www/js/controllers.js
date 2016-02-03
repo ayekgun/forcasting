@@ -39,28 +39,55 @@ angular.module('starter.controllers', ['chart.js','ionic','ionic-color-picker','
 })
 
 
-.controller('LoginCtrl', function($scope, LoginService, $ionicPopup, $state) {
-    $scope.data = {};
- 
-    $scope.login = function() {
-        LoginService.loginUser($scope.data.username, $scope.data.password).success(function(data) {
-            $state.go('app.home');
-        }).error(function(data) {
-            var alertPopup = $ionicPopup.alert({
-                title: 'Login failed!',
-                template: 'Please check your credentials!'
-            });
-        });
-    }
+.controller('LoginCtrl', function($scope, LoginService, $ionicPopup, $state, $ionicModal) {
+  $ionicModal.fromTemplateUrl('templates/login.html', {    
+  scope: $scope,
+  animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.loginModal = modal;
+  });
+
+  // Open the login modal
+  $scope.openlogin = function() {
+    $scope.loginModal.show();
+  };
+
+  // Triggered in the login modal to close it
+  $scope.closelogin = function() {
+    $scope.loginModal.hide();    
+    
+  };
+   $scope.$on('$destroy', function() {      
+      $scope.loginModal.remove();
+  });
+  
+  $scope.data = {}; 
+  $scope.login = function() {
+      LoginService.loginUser($scope.data.username, $scope.data.password).success(function(data) {
+          $state.go('app.home');
+      }).error(function(data) {
+          var alertPopup = $ionicPopup.alert({
+              title: 'Login failed!',
+              template: 'Please check your credentials!'
+          });
+      });
+  }
 })
 
 .controller( 'daftarCtrl', function ($scope, StorageService) {
+  $scope.data = {};
   $scope.things = StorageService.getAll();
+  console.log($scope.things);
 
-  $scope.add = function (newThing,newThing2) {
-    StorageService.add(newThing);
-    StorageService.add(newThing2);
+  $scope.add = function () {
+    var user = $scope.data.username;
+    var pass = $scope.data.password;
+    StorageService.add(user);
+    StorageService.add(pass);
+    // console.log(StorageService.add(newThing));
+    // StorageService.add(newThing2);
   };
+  // console.log($scope.add())
 
   $scope.remove = function (thing) {
     StorageService.remove(thing);

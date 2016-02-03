@@ -50,20 +50,21 @@ app.config(function($stateProvider, $urlRouterProvider) {
         controller: 'daftarCtrl'
   })
 
-  // .state('login', {
-  //       url: '/login',
-  //       templateUrl: 'templates/login.html',
-  //       controller: 'LoginCtrl'
-  // })
-  .state('app.login', {
-      url: '/login',
-      views: {
-        'menuContent': {
-          templateUrl: 'templates/login.html',
-          controller: 'LoginCtrl'
-        }
-      }
-    })
+  .state('login', {
+        url: '/login',
+        templateUrl: 'templates/login.html',
+        controller: 'LoginCtrl'
+  })
+
+  // .state('app.login', {
+  //     url: '/login',
+  //     views: {
+  //       'menuContent': {
+  //         templateUrl: 'templates/login.html',
+  //         controller: 'LoginCtrl'
+  //       }
+  //     }
+  //   })
  
   
   .state('app.kategori-pemasukan', {
