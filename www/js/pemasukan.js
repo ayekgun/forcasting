@@ -128,7 +128,7 @@ angular.module('pemasukan.controllers', ['chart.js','ionic','ionic-color-picker'
     //Fungsi Select Pemasukan
         var query = "SELECT pemasukan.*,kategori.warna,kategori.nama FROM pemasukan left join kategori on pemasukan.kategori=kategori.id order by pemasukan.id desc";
         var data =  $cordovaSQLite.execute(db, query).then(function(res) {
-            if(res.rows.length > 0) {
+            if(res.rows.length >= 0) {
                 //console.log("SELECTED -> " + res.rows.item(0).nama_pemasukan + " " + res.rows.item(0).jumlah);                
                 for(i=0;i<res.rows.length;i++){                    
                     var nama = res.rows.item(i).nama;                                                                            

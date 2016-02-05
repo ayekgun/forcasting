@@ -116,10 +116,10 @@ angular.module('detil-grafik.controllers', ['chart.js','ionic','ionic-color-pick
                                         var sisa = parseInt($scope.totalpem) - tbg_peng;
                                         $scope.sisa = sisa;
                                         if (tbg_peng > makspeng2) {
-                                              var pesan = "Uang Anda Sekarat"                                          
+                                              var pesan = "Kondisi Keuangan Anda Buruk"                                          
                                         }
                                         else { 
-                                          var pesan = "Uang Anda Sehat"
+                                          var pesan = "Kondisi Keuangan Anda Baik"
                                         }
                                         $scope.pesan = pesan;
                                    } else {

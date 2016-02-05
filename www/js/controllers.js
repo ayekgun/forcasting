@@ -39,7 +39,7 @@ angular.module('starter.controllers', ['chart.js','ionic','ionic-color-picker','
 })
 
 
-.controller('LoginCtrl', function($scope, LoginService, $ionicPopup, $state, $ionicModal) {
+.controller('LoginCtrl', function($scope, LoginService, $ionicPopup, $state, $ionicModal, $timeout) {
   $ionicModal.fromTemplateUrl('templates/login.html', {    
   scope: $scope,
   animation: 'slide-in-up'
@@ -71,6 +71,7 @@ angular.module('starter.controllers', ['chart.js','ionic','ionic-color-picker','
               template: 'Please check your credentials!'
           });
       });
+      $scope.loginModal.hide();
   }
 })
 
@@ -116,15 +117,15 @@ $ionicModal.fromTemplateUrl('templates/tambah.html', {
       $scope.tambahModal.remove();
   });
 
-   $scope.refresh = function(){
-    window.location = "#/app/home";
-     // $window.location.reload(true);
+  $scope.refresh = function(){
+    // window.location = "#/app/home";
+    $window.location.reload(true);
     // $state.go($state.current, {}, {reload: true});
     $scope.$broadcast('scroll.refreshComplete');
   };
   // $scope.$broadcast('scroll.refreshComplete');
   
-   $scope.Portrait = function() {
+  $scope.Portrait = function() {
       screen.unlockOrientation('portrait');
   }
 
