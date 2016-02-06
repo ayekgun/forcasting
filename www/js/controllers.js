@@ -75,27 +75,38 @@ angular.module('starter.controllers', ['chart.js','ionic','ionic-color-picker','
   }
 })
 
-.controller( 'daftarCtrl', function ($scope, StorageService) {
+.controller( 'daftarCtrl', function ($scope,$ionicPopup,$cordovaSQLite) {
+  
   $scope.data = {};
-  $scope.things = StorageService.getAll();
-  console.log($scope.things);
-
-  $scope.add = function () {
+  $scope.register = function() {
     var user = $scope.data.username;
     var pass = $scope.data.password;
-    StorageService.add(user);
-    StorageService.add(pass);
-    // console.log(StorageService.add(newThing));
-    // StorageService.add(newThing2);
-  };
-  // console.log($scope.add())
+    
+      var query = "INSERT INTO users (username,password) VALUES (?,?)";
+      $cordovaSQLite.execute(db, query, [user,pass]).then(function(res) {
+          console.log("REGISTER ID -> " + res.insertId);
+          var alertPopup = $ionicPopup.alert({
+              title: 'Success',
+              template: 'Selamat '+user+' Pendaftaran  Anda berhasil'
+          });
+          
+      }, function (err) {
+          console.error(err);
+          var alertPopup = $ionicPopup.alert({
+              title: 'Error',
+              template: 'Maaf Pendaftaran Anda gagal'
+          });  
+          $scope.pemasukanModal.hide();
+      });
+    
+    };
+
 
   $scope.remove = function (thing) {
     StorageService.remove(thing);
   };
+
 })
-
-
 .controller('tambahCtrl',function($scope, $ionicModal, $timeout , $ionicPopup, $cordovaSQLite, $filter, $state, $window){
 $ionicModal.fromTemplateUrl('templates/tambah.html', {    
     scope: $scope,

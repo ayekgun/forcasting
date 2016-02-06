@@ -27,6 +27,7 @@ app.run(function($ionicPlatform, $cordovaSQLite) {
         }                
         
     // $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS people (id integer primary key, firstname text, lastname text)");
+    $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS users(id integer primary key, username text, password text)");
     $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS pemasukan (id integer primary key, jumlah int, tabung int, tanggal DATE, toggle BOOLEAN, kategori int)");
     $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS pengeluaran (id integer primary key, nama text, jumlah int, tanggal DATE, kategori int)");
     $cordovaSQLite.execute(db, "CREATE TABLE IF NOT EXISTS kategori(id integer primary key, nama text, warna text )");
